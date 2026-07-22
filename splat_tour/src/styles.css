@@ -1,0 +1,232 @@
+:root {
+  --bg: #0b0d10;
+  --panel-bg: #14171c;
+  --text: #f2f3f5;
+  --text-dim: #9aa1ab;
+  --accent: #4fb0ff;
+  --accent-dim: rgba(79, 176, 255, 0.35);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+.app {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.app-header {
+  padding: 14px 16px 10px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.app-subtitle {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  max-width: 32ch;
+}
+
+.app-main {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+}
+
+/* --- Viewer --- */
+
+.viewer-root {
+  position: absolute;
+  inset: 0;
+}
+
+.viewer-canvas-container {
+  position: absolute;
+  inset: 0;
+}
+
+.viewer-canvas-container canvas {
+  display: block;
+  touch-action: none; /* laisse OrbitControls gérer tous les gestes tactiles */
+}
+
+.viewer-loading,
+.viewer-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  background: var(--bg);
+  padding: 24px;
+  text-align: center;
+}
+
+.viewer-loading-bar {
+  width: min(220px, 60vw);
+  height: 3px;
+  background: #262b33;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.viewer-loading-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.15s ease-out;
+}
+
+.viewer-error {
+  color: #ff8a8a;
+}
+
+/* --- Hotspots --- */
+
+.hotspot-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hotspot-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: auto;
+  background: none;
+  border: none;
+  padding: 8px; /* zone tactile confortable, > 44px avec le dot+label */
+  cursor: pointer;
+  color: var(--text);
+}
+
+.hotspot-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px var(--accent-dim);
+  flex-shrink: 0;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.hotspot-marker:active .hotspot-dot,
+.hotspot-marker.is-active .hotspot-dot {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 7px var(--accent-dim);
+}
+
+.hotspot-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  background: rgba(10, 12, 15, 0.72);
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+}
+
+/* --- Legend panel --- */
+/* Mobile : bottom sheet. Desktop (min-width 720px) : panneau latéral. */
+
+.legend-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background: var(--panel-bg);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding: 18px 20px calc(20px + env(safe-area-inset-bottom));
+  transform: translateY(100%);
+  transition: transform 0.25s ease-out;
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.legend-panel.is-open {
+  transform: translateY(0);
+}
+
+.legend-panel h2 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.legend-panel p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+.legend-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #262b33;
+  color: var(--text);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media (min-width: 720px) {
+  .legend-panel {
+    left: auto;
+    top: 0;
+    width: 320px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 16px;
+    padding: 24px;
+    transform: translateX(100%);
+  }
+
+  .legend-panel.is-open {
+    transform: translateX(0);
+  }
+}
